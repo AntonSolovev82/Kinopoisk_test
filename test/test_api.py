@@ -1,6 +1,6 @@
 import allure
 import requests
-from config.settings import BASE_URL_API, API_TOKEN, YEAR, GENRE
+from config.settings import BASE_URL_API, API_TOKEN, YEAR, GENRE, ACTOR_EN
 
 @allure.feature("Поиск фильмов")
 @allure.story("Поиск фильма по названию")
@@ -44,18 +44,17 @@ def test_search_movie_by_genre():
         assert found_genre, f"Жанр '{genre_to_search}' не найден в результатах"
 
 @allure.story("Поиск актера")
-@allure.title("Тест: Поиск актера 'Leonardo DiCaprio'")
-@allure.description("Проверяем, что API возвращает актера с именем 'Leonardo DiCaprio'.")
+@allure.title(f"Тест: Поиск актера '{ACTOR_EN}'")
+@allure.description(f"Проверяем, что API возвращает актера с именем '{ACTOR_EN}'.")
 def test_search_actor():
-    actor = "Leonardo DiCaprio"
-    response = requests.get(f"{BASE_URL_API}/person/search?query={actor}", headers=API_TOKEN)
+    response = requests.get(f"{BASE_URL_API}/person/search?query={ACTOR_EN}", headers=API_TOKEN)
 
     with allure.step("Проверка статуса ответа"):
         assert response.status_code == 200, f"Ожидался статус 200, но получен {response.status_code}"
 
     response_name = response.json()["docs"][0]["enName"]
     with allure.step("Проверка имени актера в ответе"):
-        assert response_name == actor, f"Ожидалось имя '{actor}', но получено '{response_name}'"
+        assert response_name == ACTOR_EN, f"Ожидалось имя '{ACTOR_EN}', но получено '{response_name}'"
 
 @allure.story("Поиск с пустым запросом")
 @allure.title("Тест: Поиск с пустым запросом")
